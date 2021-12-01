@@ -27,6 +27,7 @@ class MoviesDetailActivity : AppCompatActivity() {
         binding.viewModel = moviesDetailViewModel
         binding.lifecycleOwner = this
         initializeObservers()
+        //
     }
 
     private fun initializeObservers() {

@@ -2,21 +2,28 @@ package com.example.moviesapplication.repositories
 
 import androidx.lifecycle.MutableLiveData
 import com.example.moviesapplication.interfaces.NetworkResponseCallback
+import com.example.moviesapplication.models.addmovies.AddMoviesModel
+import com.example.moviesapplication.models.addmovies.MovieInput
 import com.example.moviesapplication.models.moviesdetail.MoviesDetailModel
 import com.example.moviesapplication.models.movieslist.Movies
 import com.example.moviesapplication.models.movieslist.MoviesMetadata
 import com.example.moviesapplication.network.RestClient
+import okhttp3.MediaType
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import okhttp3.RequestBody
+
 
 class MoviesRepository private constructor() {
     private lateinit var mCallback: NetworkResponseCallback
     private var mMovie: MutableLiveData<Movies?> = MutableLiveData<Movies?>()
     private var moviesDetail: MutableLiveData<MoviesDetailModel?> =
         MutableLiveData<MoviesDetailModel?>()
+    private var addMovie: MutableLiveData<AddMoviesModel?> = MutableLiveData<AddMoviesModel?>()
     private lateinit var movieCall: Call<Movies>
     private lateinit var movieDetailCall: Call<MoviesDetailModel>
+    private lateinit var addMovieCall: Call<AddMoviesModel>
 
     fun getMovies(
         callback: NetworkResponseCallback,
@@ -77,15 +84,16 @@ class MoviesRepository private constructor() {
     fun searchMovies(
         callback: NetworkResponseCallback,
         forceFetch: Boolean,
-        movieName:String,
-        page:Int
+        movieName: String,
+        page: Int
     ): MutableLiveData<Movies?> {
         mCallback = callback
         if (mMovie.value != null && !forceFetch) {
             mCallback.onResponseSuccess()
             return mMovie
         }
-        movieCall = RestClient.getInstance().getApiService().searchMovies(name = movieName,page = page)
+        movieCall =
+            RestClient.getInstance().getApiService().searchMovies(name = movieName, page = page)
         movieCall.enqueue(object : Callback<Movies> {
 
             override fun onResponse(call: Call<Movies>, response: Response<Movies>) {
@@ -102,6 +110,50 @@ class MoviesRepository private constructor() {
         return mMovie
     }
 
+
+    fun addMovie(
+        callback: NetworkResponseCallback,
+        forceFetch: Boolean,
+        movieInput: MovieInput
+    ): MutableLiveData<AddMoviesModel?> {
+        mCallback = callback
+        if (addMovie.value != null && !forceFetch) {
+            mCallback.onResponseSuccess()
+            return addMovie
+        }
+        val file: RequestBody = RequestBody.create(
+            MediaType.parse("image/*"),
+            movieInput.poster
+        )
+
+        addMovieCall = RestClient.getInstance().getApiService()
+            .addMovie(
+                movieInput.title,
+                movieInput.imdbId,
+                movieInput.country,
+                movieInput.year,
+                movieInput.director.toString(),
+                movieInput.imdbRating.toString(),
+                movieInput.imdbVotes.toString(),
+                file
+            )
+        addMovieCall.enqueue(object : Callback<AddMoviesModel> {
+            override fun onResponse(
+                call: Call<AddMoviesModel>,
+                response: Response<AddMoviesModel>
+            ) {
+                addMovie.value = response.body()
+                mCallback.onResponseSuccess()
+            }
+
+            override fun onFailure(call: Call<AddMoviesModel>, t: Throwable) {
+                addMovie.value = null
+                mCallback.onResponseFailure(t)
+            }
+
+        })
+        return addMovie
+    }
 
 
     companion object {
