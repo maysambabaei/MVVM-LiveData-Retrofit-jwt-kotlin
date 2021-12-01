@@ -1,5 +1,6 @@
 package com.example.moviesapplication.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviesapplication.R
 import com.example.moviesapplication.adapters.MoviesAdapter
 import com.example.moviesapplication.databinding.ActivityMainBinding
+import com.example.moviesapplication.ui.addmovie.AddMoviesActivity
 import com.example.moviesapplication.viewmodels.MoviesViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -97,7 +99,7 @@ class MainActivity : AppCompatActivity() {
                         AlertDialog.Builder(this@MainActivity)
                             .setMessage(R.string.app_no_internet_msg).show()
                     })
-                }else if (p0!!.isEmpty()){
+                } else if (p0!!.isEmpty()) {
                     moviesViewModel.getMovies(true)
                 }
 
@@ -108,6 +110,12 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+
+        fab_addMovie.setOnClickListener {
+            var intent = Intent(this@MainActivity, AddMoviesActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 
 }
