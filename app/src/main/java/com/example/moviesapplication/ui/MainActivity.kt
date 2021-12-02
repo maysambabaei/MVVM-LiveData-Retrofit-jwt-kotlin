@@ -1,6 +1,8 @@
 package com.example.moviesapplication.ui
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -8,15 +10,15 @@ import android.text.TextWatcher
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviesapplication.R
 import com.example.moviesapplication.adapters.MoviesAdapter
 import com.example.moviesapplication.databinding.ActivityMainBinding
 import com.example.moviesapplication.ui.addmovie.AddMoviesActivity
+import com.example.moviesapplication.ui.user.LoginActivity
+import com.example.moviesapplication.ui.user.UserActivity
 import com.example.moviesapplication.viewmodels.MoviesViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -27,16 +29,30 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var searchText: String = ""
     private var page: Int = 1
+    private var token: String? = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        moviesViewModel = ViewModelProvider(this).get(MoviesViewModel::class.java)
-        binding.viewModel = moviesViewModel
-        binding.lifecycleOwner = this
-        initializeRecyclerView()
-        initializeObservers()
-        listener()
+        val sharedPreferences: SharedPreferences =
+            this@MainActivity.getSharedPreferences(
+                "myPrefs",
+                Context.MODE_PRIVATE
+            )
+        token = sharedPreferences.getString("PREFS_AUTH_ACCESSES_TOKEN", null)
+        if (token == null) {
+            finish()
+            var intent = Intent(this@MainActivity, LoginActivity::class.java)
+            startActivity(intent)
+        } else {
+            binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+            moviesViewModel = ViewModelProvider(this).get(MoviesViewModel::class.java)
+            binding.viewModel = moviesViewModel
+            binding.lifecycleOwner = this
+            initializeRecyclerView()
+            initializeObservers()
+            listener()
+        }
     }
 
     private fun initializeRecyclerView() {
@@ -71,7 +87,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun listener() {
-        et_search.addTextChangedListener(object : TextWatcher {
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
             }
@@ -111,11 +127,15 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        fab_addMovie.setOnClickListener {
+        binding.floatingActionButton.setOnClickListener {
             var intent = Intent(this@MainActivity, AddMoviesActivity::class.java)
             startActivity(intent)
         }
 
+        binding.ivUser.setOnClickListener {
+            var intent = Intent(this@MainActivity, UserActivity::class.java)
+            startActivity(intent)
+        }
     }
 
 }
