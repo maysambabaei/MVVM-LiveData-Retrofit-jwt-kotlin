@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/TestProject/BugetoMoqadamati/app/src/main/res/drawable/edittext_background_shape.xml" value="0.2169230769230769" />
+        <entry key="..\:/TestProject/BugetoMoqadamati/app/src/main/res/drawable/genres_shape.xml" value="0.21296296296296297" />
         <entry key="..\:/TestProject/BugetoMoqadamati/app/src/main/res/drawable/ic_login.xml" value="0.2169230769230769" />
         <entry key="..\:/TestProject/BugetoMoqadamati/app/src/main/res/drawable/ic_user.xml" value="0.2169230769230769" />
         <entry key="..\:/TestProject/BugetoMoqadamati/app/src/main/res/drawable/login_box_shape.xml" value="0.8642857142857143" />
@@ -13,6 +14,7 @@
         <entry key="..\:/TestProject/BugetoMoqadamati/app/src/main/res/layout/activity_movies_detail.xml" value="0.25" />
         <entry key="..\:/TestProject/BugetoMoqadamati/app/src/main/res/layout/activity_register_user.xml" value="0.20416666666666666" />
         <entry key="..\:/TestProject/BugetoMoqadamati/app/src/main/res/layout/activity_user.xml" value="0.20416666666666666" />
+        <entry key="..\:/TestProject/BugetoMoqadamati/app/src/main/res/layout/item_genres.xml" value="0.25" />
         <entry key="..\:/TestProject/BugetoMoqadamati/app/src/main/res/layout/item_movies.xml" value="0.22" />
       </map>
     </option>

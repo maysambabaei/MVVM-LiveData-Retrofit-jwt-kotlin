@@ -1,6 +1,7 @@
 package com.example.moviesapplication.network
 
 import com.example.moviesapplication.models.addmovies.AddMoviesModel
+import com.example.moviesapplication.models.genres.GenresData
 import com.example.moviesapplication.models.login.LoginUserModel
 import com.example.moviesapplication.models.moviesdetail.MoviesDetailModel
 import com.example.moviesapplication.models.movieslist.Movies
@@ -54,6 +55,10 @@ interface ApiServices {
     fun refreshToken(
         @Query("grant_type") grantType: String,
         @Query("refresh_token") refreshToken: String
-    ):Call<RefreshTokenModel>
+    ): Call<RefreshTokenModel>
+
+    @GET("api/v1/genres")
+    fun getGenres(): Call<List<GenresData?>>
+
 
 }
