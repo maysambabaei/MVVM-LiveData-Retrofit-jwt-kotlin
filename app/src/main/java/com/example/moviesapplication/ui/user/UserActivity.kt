@@ -35,15 +35,16 @@ class UserActivity : AppCompatActivity() {
     }
 
     private fun initializeObservers() {
-        userViewModel.getUser().observe(this, Observer { movie ->
+        userViewModel.getUser(true).observe(this, Observer { user ->
             binding.progressBar.visibility = View.VISIBLE
-            binding.tvName.text = movie?.name
-            binding.tvCreatedAt.text = movie?.createdAt
-            binding.tvEmail.text = movie?.email
-            binding.tvUpdatedAt.text = movie?.updatedAt
+            binding.tvName.text = user?.name
+            binding.tvCreatedAt.text = user?.createdAt
+            binding.tvEmail.text = user?.email
+            binding.tvUpdatedAt.text = user?.updatedAt
         })
         userViewModel.mShowApiError.observe(this, Observer {
             AlertDialog.Builder(this).setMessage(it).show()
+            binding.progressBar.visibility = View.GONE
         })
         userViewModel.mShowProgressBar.observe(this, Observer { bt ->
             if (bt) {
@@ -54,6 +55,7 @@ class UserActivity : AppCompatActivity() {
             }
         })
         userViewModel.mShowNetworkError.observe(this, Observer {
+            binding.progressBar.visibility = View.GONE
             AlertDialog.Builder(this).setMessage(R.string.app_no_internet_msg).show()
         })
     }

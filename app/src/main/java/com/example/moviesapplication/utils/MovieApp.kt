@@ -10,10 +10,18 @@ class MovieApp : Application() {
         context = applicationContext
     }
 
+
     companion object {
+        private var movieApp: MovieApp? = null
         lateinit var context: Context
         fun getAppContext(): Context {
             return context
+        }
+        fun getInstance(): MovieApp? {
+            if (movieApp == null) {
+                movieApp = MovieApp()
+            }
+            return movieApp
         }
     }
 }

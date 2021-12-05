@@ -59,7 +59,7 @@ class UserViewModel(private val app: Application) : AndroidViewModel(app) {
         return user
     }
 
-    fun getUser(): MutableLiveData<UserModel?> {
+    fun getUser(forceFetch: Boolean): MutableLiveData<UserModel?> {
         if (NetworkHelper.isOnline(app.baseContext)) {
             mShowProgressBar.value = true
             profileUser = mRepository.getUser(object : NetworkResponseCallback {
@@ -71,7 +71,7 @@ class UserViewModel(private val app: Application) : AndroidViewModel(app) {
                     mShowApiError.value = th.message
                 }
 
-            })
+            },forceFetch)
         } else {
             mShowNetworkError.value = true
         }
