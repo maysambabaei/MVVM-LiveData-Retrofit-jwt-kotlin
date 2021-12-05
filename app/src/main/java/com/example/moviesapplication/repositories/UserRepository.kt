@@ -85,13 +85,15 @@ class UserRepository private constructor() {
 
     fun getUser(
         callback: NetworkResponseCallback,
+        forceFetch: Boolean
     ): MutableLiveData<UserModel?> {
         mCallback = callback
-        if (user.value != null) {
+        if (user.value != null && !forceFetch) {
             mCallback.onResponseSuccess()
             return user
         }
-        userCall = RestClient.getInstance().getApiService().getUser()
+        var restClient=RestClient()
+        userCall = restClient.getApiService().getUser()
         userCall.enqueue(object : Callback<UserModel?> {
             override fun onResponse(call: Call<UserModel?>, response: Response<UserModel?>) {
                 user.value = response.body()
@@ -104,7 +106,6 @@ class UserRepository private constructor() {
             }
 
         })
-
         return user
     }
 

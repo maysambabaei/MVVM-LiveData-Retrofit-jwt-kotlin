@@ -4,6 +4,7 @@ import com.example.moviesapplication.models.addmovies.AddMoviesModel
 import com.example.moviesapplication.models.login.LoginUserModel
 import com.example.moviesapplication.models.moviesdetail.MoviesDetailModel
 import com.example.moviesapplication.models.movieslist.Movies
+import com.example.moviesapplication.models.register.RefreshTokenModel
 import com.example.moviesapplication.models.user.UserModel
 import com.example.moviesapplication.models.register.RegisterUserInput
 import com.example.moviesapplication.models.register.RegisterUserModel
@@ -44,9 +45,15 @@ interface ApiServices {
         @Query("grant_type") grantType: String,
         @Query("username") username: String,
         @Query("password") password: String
-    ):Call<LoginUserModel>
+    ): Call<LoginUserModel>
 
     @GET("api/user")
-    fun getUser():Call<UserModel>
+    fun getUser(): Call<UserModel>
+
+    @POST("oauth/token")
+    fun refreshToken(
+        @Query("grant_type") grantType: String,
+        @Query("refresh_token") refreshToken: String
+    ):Call<RefreshTokenModel>
 
 }
