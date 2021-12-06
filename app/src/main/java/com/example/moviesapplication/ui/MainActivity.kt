@@ -14,8 +14,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviesapplication.R
+import com.example.moviesapplication.adapters.GenresAdapter
 import com.example.moviesapplication.adapters.MoviesAdapter
 import com.example.moviesapplication.databinding.ActivityMainBinding
+import com.example.moviesapplication.models.genres.GenresData
 import com.example.moviesapplication.ui.addmovie.AddMoviesActivity
 import com.example.moviesapplication.ui.user.LoginActivity
 import com.example.moviesapplication.ui.user.UserActivity
@@ -25,6 +27,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var moviesAdapter: MoviesAdapter
+    private lateinit var genresAdapter: GenresAdapter
     private lateinit var moviesViewModel: MoviesViewModel
     private lateinit var binding: ActivityMainBinding
     private var searchText: String = ""
@@ -57,14 +60,27 @@ class MainActivity : AppCompatActivity() {
 
     private fun initializeRecyclerView() {
         moviesAdapter = MoviesAdapter()
+        genresAdapter = GenresAdapter()
         binding.recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = moviesAdapter
         }
+        binding.rvGenres.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = genresAdapter
+        }
     }
 
     private fun initializeObservers() {
+
+
+        moviesViewModel.getGenresMovie(false,genresId = genresId, page = page)
+            .observe(this, Observer { movie ->
+                moviesAdapter.setData(movie?.data!!, this@MainActivity)
+            })
+
         moviesViewModel.getMovies(false).observe(this, Observer { movie ->
             moviesAdapter.setData(movie?.data!!, this@MainActivity)
         })
@@ -83,6 +99,24 @@ class MainActivity : AppCompatActivity() {
         moviesViewModel.mShowNetworkError.observe(this, Observer {
             AlertDialog.Builder(this).setMessage(R.string.app_no_internet_msg).show()
         })
+
+        moviesViewModel.getGenres().observe(this, Observer { genres ->
+            genresAdapter.setData(genres as List<GenresData>, this@MainActivity, moviesViewModel)
+        })
+
+        moviesViewModel.mShowApiError.observe(this, Observer {
+            AlertDialog.Builder(this).setMessage(it).show()
+        })
+        moviesViewModel.mShowProgressBar.observe(this, Observer { bt ->
+            if (bt) {
+                binding.progressBar.visibility = View.VISIBLE
+                binding.floatingActionButton.hide()
+            } else {
+                binding.progressBar.visibility = View.GONE
+                binding.floatingActionButton.show()
+            }
+        })
+
     }
 
 
@@ -136,6 +170,11 @@ class MainActivity : AppCompatActivity() {
             var intent = Intent(this@MainActivity, UserActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    companion object {
+        var genresId: Int = 0
+        var page: Int = 0
     }
 
 }
