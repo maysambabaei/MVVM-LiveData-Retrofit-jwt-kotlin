@@ -18,11 +18,13 @@ import retrofit2.Response
 class MoviesRepository private constructor() {
     private lateinit var mCallback: NetworkResponseCallback
     private var mMovie: MutableLiveData<Movies?> = MutableLiveData<Movies?>()
+    private var genresMovie: MutableLiveData<Movies?> = MutableLiveData<Movies?>()
     private var moviesDetail: MutableLiveData<MoviesDetailModel?> =
         MutableLiveData<MoviesDetailModel?>()
     private var addMovie: MutableLiveData<AddMoviesModel?> = MutableLiveData<AddMoviesModel?>()
-    private var genres: MutableLiveData<List<GenresData?>> = MutableLiveData<List<GenresData?>>()
+    private var genres: MutableLiveData<List<GenresData?>?> = MutableLiveData<List<GenresData?>?>()
     private lateinit var movieCall: Call<Movies>
+    private lateinit var genresMovieCall: Call<Movies>
     private lateinit var movieDetailCall: Call<MoviesDetailModel>
     private lateinit var addMovieCall: Call<AddMoviesModel>
     private lateinit var getGenresCall: Call<List<GenresData?>>
@@ -159,7 +161,7 @@ class MoviesRepository private constructor() {
 
     fun getGenres(
         callback: NetworkResponseCallback
-    ): MutableLiveData<List<GenresData?>> {
+    ): MutableLiveData<List<GenresData?>?> {
         mCallback = callback
         if (genres.value != null) {
             mCallback.onResponseSuccess()
@@ -184,6 +186,33 @@ class MoviesRepository private constructor() {
         return genres
     }
 
+    fun getGenresMovies(
+        callback: NetworkResponseCallback,
+        forceFetch:Boolean,
+        genresId:Int,
+        page:Int
+    ): MutableLiveData<Movies?> {
+        mCallback = callback
+        if (genresMovie.value != null&& !forceFetch) {
+            mCallback.onResponseSuccess()
+            return genresMovie
+        }
+        genresMovieCall = RestClient.getInstance().getApiService().getGenresMovies(genresId,page)
+        genresMovieCall.enqueue(object : Callback<Movies> {
+
+            override fun onResponse(call: Call<Movies>, response: Response<Movies>) {
+                genresMovie.value = response.body()
+                mCallback.onResponseSuccess()
+            }
+
+            override fun onFailure(call: Call<Movies>, t: Throwable) {
+                genresMovie.value = null
+                mCallback.onResponseFailure(t)
+            }
+
+        })
+        return genresMovie
+    }
 
     companion object {
         private var mInstance: MoviesRepository? = null

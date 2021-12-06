@@ -60,5 +60,7 @@ interface ApiServices {
     @GET("api/v1/genres")
     fun getGenres(): Call<List<GenresData?>>
 
+    @GET("api/v1/genres/{genre_id}/movies")
+    fun getGenresMovies(@Path("genre_id") id: Int, @Query("page") page: Int): Call<Movies>
 
 }

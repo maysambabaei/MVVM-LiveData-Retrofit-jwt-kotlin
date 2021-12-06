@@ -13,7 +13,8 @@ import com.example.moviesapplication.utils.NetworkHelper
 class MoviesViewModel(private val app: Application) : AndroidViewModel(app) {
 
     private lateinit var movies: MutableLiveData<Movies?>
-    private lateinit var genres: MutableLiveData<List<GenresData?>>
+    private lateinit var genresMovies: MutableLiveData<Movies?>
+    private lateinit var genres: MutableLiveData<List<GenresData?>?>
     val mShowProgressBar = MutableLiveData(true)
     val mShowNetworkError: MutableLiveData<Boolean> = MutableLiveData()
     val mShowApiError = MutableLiveData<String>()
@@ -57,7 +58,7 @@ class MoviesViewModel(private val app: Application) : AndroidViewModel(app) {
         return movies
     }
 
-    fun getGenres(): MutableLiveData<List<GenresData?>> {
+    fun getGenres(): MutableLiveData<List<GenresData?>?> {
         if (NetworkHelper.isOnline(app.baseContext)) {
             mShowProgressBar.value = true
             genres = mRepository.getGenres(object : NetworkResponseCallback {
@@ -76,6 +77,24 @@ class MoviesViewModel(private val app: Application) : AndroidViewModel(app) {
         return genres
     }
 
+    fun getGenresMovie(forceFetch:Boolean,genresId:Int,page: Int):MutableLiveData<Movies?>{
+        if (NetworkHelper.isOnline(app.baseContext)) {
+            mShowProgressBar.value = true
+            genresMovies = mRepository.getGenresMovies(object : NetworkResponseCallback {
+                override fun onResponseSuccess() {
+                    mShowProgressBar.value = false
+                }
+
+                override fun onResponseFailure(th: Throwable) {
+                    mShowApiError.value = th.message
+                }
+
+            },forceFetch,genresId,page)
+        } else {
+            mShowNetworkError.value = true
+        }
+        return genresMovies
+    }
 
     fun onRefreshClicked(view: View) {
         getMovies(true)

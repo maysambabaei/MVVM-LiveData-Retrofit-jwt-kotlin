@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesapplication.R
 import com.example.moviesapplication.models.genres.GenresData
+import com.example.moviesapplication.ui.MainActivity
 import com.example.moviesapplication.viewmodels.MoviesViewModel
 
 class GenresAdapter : RecyclerView.Adapter<GenresAdapter.GenresViewHolder>() {
@@ -22,10 +23,12 @@ class GenresAdapter : RecyclerView.Adapter<GenresAdapter.GenresViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: GenresViewHolder, position: Int) {
-        var ganre = genres?.get(position)
-        holder.tvName.text = ganre?.name.toString()
+        var genre = genres?.get(position)
+        holder.tvName.text = genre?.name.toString()
         holder.lyGenres.setOnClickListener {
-            viewModel.getMovies(true)
+            MainActivity.genresId=genre?.id!!
+            MainActivity.page=1
+            viewModel.getGenresMovie(true,genre.id!!,1)
         }
     }
 

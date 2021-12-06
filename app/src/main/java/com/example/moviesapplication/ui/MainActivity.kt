@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initializeRecyclerView() {
         moviesAdapter = MoviesAdapter()
-        genresAdapter= GenresAdapter()
+        genresAdapter = GenresAdapter()
         binding.recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -68,12 +68,19 @@ class MainActivity : AppCompatActivity() {
         }
         binding.rvGenres.apply {
             setHasFixedSize(true)
-            layoutManager=LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
-            adapter=genresAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = genresAdapter
         }
     }
 
     private fun initializeObservers() {
+
+
+        moviesViewModel.getGenresMovie(false,genresId = genresId, page = page)
+            .observe(this, Observer { movie ->
+                moviesAdapter.setData(movie?.data!!, this@MainActivity)
+            })
+
         moviesViewModel.getMovies(false).observe(this, Observer { movie ->
             moviesAdapter.setData(movie?.data!!, this@MainActivity)
         })
@@ -94,7 +101,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         moviesViewModel.getGenres().observe(this, Observer { genres ->
-            genresAdapter.setData(genres as List<GenresData>, this@MainActivity,moviesViewModel)
+            genresAdapter.setData(genres as List<GenresData>, this@MainActivity, moviesViewModel)
         })
 
         moviesViewModel.mShowApiError.observe(this, Observer {
@@ -163,6 +170,11 @@ class MainActivity : AppCompatActivity() {
             var intent = Intent(this@MainActivity, UserActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    companion object {
+        var genresId: Int = 0
+        var page: Int = 0
     }
 
 }
