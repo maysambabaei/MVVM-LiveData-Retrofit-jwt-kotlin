@@ -3,8 +3,6 @@ plugins {
 
    id 'kotlin-android'
 
-   id 'kotlin-android-extensions'
-
    id 'kotlin-kapt'
 }
 
