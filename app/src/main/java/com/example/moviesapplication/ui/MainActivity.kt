@@ -22,7 +22,6 @@ import com.example.moviesapplication.ui.addmovie.AddMoviesActivity
 import com.example.moviesapplication.ui.user.LoginActivity
 import com.example.moviesapplication.ui.user.UserActivity
 import com.example.moviesapplication.viewmodels.MoviesViewModel
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 

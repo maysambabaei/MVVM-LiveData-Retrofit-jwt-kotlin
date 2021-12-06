@@ -21,8 +21,6 @@ import com.example.moviesapplication.R
 import com.example.moviesapplication.databinding.ActivityAddMoviesBinding
 import com.example.moviesapplication.models.addmovies.MovieInput
 import com.example.moviesapplication.viewmodels.AddMoviesViewModel
-import com.example.moviesapplication.viewmodels.MoviesViewModel
-import kotlinx.android.synthetic.main.activity_add_movies.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -57,10 +55,10 @@ class AddMoviesActivity : AppCompatActivity() {
     }
 
     private fun listener() {
-        iv_poster.setOnClickListener {
+        binding.ivPoster.setOnClickListener {
             getImage()
         }
-        bt_save.setOnClickListener {
+        binding.btSave.setOnClickListener {
             title = binding.etName.text.toString()
             imdbId = binding.etImdbId.text.toString()
             country = binding.etCountry.text.toString()
@@ -151,7 +149,7 @@ class AddMoviesActivity : AppCompatActivity() {
                     fos.flush()
                     fos.close()
                     poster = file
-                    iv_poster.setImageBitmap(bitmap)
+                    binding.ivPoster.setImageBitmap(bitmap)
                 }
             }
         }
