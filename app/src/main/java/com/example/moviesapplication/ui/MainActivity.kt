@@ -160,7 +160,7 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        binding.floatingActionButton.setOnClickListener {
+        binding.fabAddMovie.setOnClickListener {
             var intent = Intent(this@MainActivity, AddMoviesActivity::class.java)
             startActivity(intent)
         }
