@@ -94,7 +94,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginBottom="24dp"
             android:clickable="true"
-            android:contentDescription="@string/refresh_text"
+            android:contentDescription="@string/add_movie"
             android:focusable="true"
             android:src="@android:drawable/ic_input_add"
             app:layout_constraintBottom_toBottomOf="parent"
