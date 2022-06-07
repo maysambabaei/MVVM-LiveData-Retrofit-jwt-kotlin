@@ -17,7 +17,7 @@ class ResponseInterceptor : Interceptor {
     private var mApplication: MovieApp
     private var mContext: Context?
 
-    constructor() {
+    constructor() { 
         mApplication = MovieApp.getInstance()!!
         mContext = null
     }
@@ -84,6 +84,7 @@ class ResponseInterceptor : Interceptor {
                     null
                 }
             }
+            
             lResponse.code() === 403 -> {
                 // forbidden
                 Log.e("interceptor", "403")
@@ -109,6 +110,7 @@ class ResponseInterceptor : Interceptor {
                 Log.e("interceptor", "504")
             }
         }
+        
 
         return lResponse
     }
